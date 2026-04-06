@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Appointment - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --success: #06d6a0;
+            --info: #4895ef;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--info), #3a86ff);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .specializations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .spec-card {
+            background: var(--bg-surface);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .spec-card:hover,
+        .spec-card.selected {
+            border-color: var(--info);
+            background: rgba(72, 149, 239, 0.1);
+        }
+
+        .spec-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .spec-card h3 {
+            font-size: 16px;
+        }
+
+        .hospitals-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .hospital-card {
+            background: var(--bg-surface);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hospital-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .hospital-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .hospital-info .phone {
+            color: var(--info);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background: var(--info);
+            color: white;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .time-slot {
+            background: var(--bg-surface);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .time-slot:hover,
+        .time-slot.selected {
+            border-color: var(--success);
+            background: rgba(6, 214, 160, 0.1);
+        }
+
+        .booking-form {
+            background: var(--bg-surface);
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .btn-book {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--success), #00b894);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🩺 Doctor Appointment Booking</h1>
+        <p>Book appointments with doctors near you</p>
+    </div>
+
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <!-- Step 1: Select Specialization -->
+        <div class="section" id="step1">
+            <h2>1. Select Specialization</h2>
+            <div class="specializations">
+                <div class="spec-card" onclick="selectSpec('Cardiologist', this)">
+                    <div class="icon">❤️</div>
+                    <h3>Cardiologist</h3>
+                </div>
+                <div class="spec-card" onclick="selectSpec('General Doctor', this)">
+                    <div class="icon">👨‍⚕️</div>
+                    <h3>General Doctor</h3>
+                </div>
+                <div class="spec-card" onclick="selectSpec('Neurologist', this)">
+                    <div class="icon">🧠</div>
+                    <h3>Neurologist</h3>
+                </div>
+                <div class="spec-card" onclick="selectSpec('Orthopedic', this)">
+                    <div class="icon">🦴</div>
+                    <h3>Orthopedic</h3>
+                </div>
+                <div class="spec-card" onclick="selectSpec('Pediatrician', this)">
+                    <div class="icon">👶</div>
+                    <h3>Pediatrician</h3>
+                </div>
+                <div class="spec-card" onclick="selectSpec('Dermatologist', this)">
+                    <div class="icon">🧴</div>
+                    <h3>Dermatologist</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Select Hospital -->
+        <div class="section hidden" id="step2">
+            <h2>2. Choose Hospital/Clinic</h2>
+            <div class="hospitals-list" id="hospitalsList"></div>
+            <button class="btn btn-primary" style="margin-top:20px" onclick="showStep(1)">← Back</button>
+        </div>
+
+        <!-- Step 3: Select Doctor -->
+        <div class="section hidden" id="step3">
+            <h2>3. Choose Doctor</h2>
+            <div class="hospitals-list" id="doctorsList"></div>
+            <button class="btn btn-primary" style="margin-top:20px" onclick="showStep(2)">← Back</button>
+        </div>
+
+        <!-- Step 4: Select Time Slot -->
+        <div class="section hidden" id="step4">
+            <h2>4. Pick Time Slot</h2>
+            <div class="time-slots" id="timeSlots"></div>
+            <button class="btn btn-primary" style="margin-top:20px" onclick="showStep(3)">← Back</button>
+        </div>
+
+        <!-- Step 5: Confirm Booking -->
+        <div class="section hidden" id="step5">
+            <h2>5. Confirm Booking</h2>
+            <div class="booking-form">
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" id="patientName" placeholder="Enter patient name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="patientPhone" placeholder="Enter 10-digit mobile number" maxlength="10"
+                        minlength="10" pattern="[0-9]{10}"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+                </div>
+                <div class="form-group">
+                    <label>Specialization</label>
+                    <input type="text" id="selectedSpecDisplay" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Selected Doctor</label>
+                    <input type="text" id="selectedDoctor" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Selected Hospital</label>
+                    <input type="text" id="selectedHospital" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Selected Time</label>
+                    <input type="text" id="selectedTime" readonly>
+                </div>
+                <button class="btn btn-book" onclick="confirmBooking()">✅ Confirm Appointment</button>
+                <button class="btn btn-primary" style="margin-top:15px;width:100%" onclick="showStep(4)">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const hospitals = [
+            { name: 'NIMS Hospital', address: 'Punjagutta, Hyderabad', phone: '040-23390202', spec: 'Cardiologist' },
+            { name: 'Apollo Hospital', address: 'Jubilee Hills, Hyderabad', phone: '040-23607777', spec: 'Cardiologist' },
+            { name: 'KIMS Hospital', address: 'Secunderabad', phone: '040-44885000', spec: 'General Doctor' },
+            { name: 'Yashoda Hospital', address: 'Somajiguda, Hyderabad', phone: '040-45674567', spec: 'Cardiologist' },
+            { name: 'Care Hospital', address: 'Banjara Hills, Hyderabad', phone: '040-30418888', spec: 'Neurologist' },
+            { name: 'Sunshine Hospital', address: 'Secunderabad', phone: '040-27700000', spec: 'Orthopedic' },
+            { name: 'City Clinic', address: 'Kukatpally, Hyderabad', phone: '040-12345678', spec: 'Dermatologist' },
+            { name: 'Kids Care', address: 'Gachibowli, Hyderabad', phone: '040-87654321', spec: 'Pediatrician' },
+        ];
+
+        const doctors = {
+            'NIMS Hospital': [
+                { name: 'Dr. Arun Kumar', spec: 'Cardiologist', username: 'doctor1' },
+                { name: 'Dr. Sarah Varma', spec: 'Cardiologist', username: 'doctor1' }
+            ],
+            'Apollo Hospital': [
+                { name: 'Dr. Vikram Seth', spec: 'Cardiologist', username: 'doctor2' },
+                { name: 'Dr. Meera Reddy', spec: 'Cardiologist', username: 'doctor2' }
+            ],
+            'Yashoda Hospital': [
+                { name: 'Dr. Sanjay Gupta', spec: 'Cardiologist', username: 'doctor1' },
+                { name: 'Dr. Anil Shah', spec: 'Cardiologist', username: 'doctor2' }
+            ],
+            'KIMS Hospital': [
+                { name: 'Dr. Rajesh Sharma', spec: 'General Doctor', username: 'doctor1' },
+                { name: 'Dr. Priya Das', spec: 'General Doctor', username: 'doctor2' }
+            ],
+            'Care Hospital': [
+                { name: 'Dr. N. Rao', spec: 'Neurologist', username: 'doctor1' },
+                { name: 'Dr. K. Smitha', spec: 'Neurologist', username: 'doctor2' }
+            ],
+            'Sunshine Hospital': [
+                { name: 'Dr. Harsha Vardhan', spec: 'Orthopedic', username: 'doctor1' },
+                { name: 'Dr. S. Srinivas', spec: 'Orthopedic', username: 'doctor2' }
+            ],
+            'City Clinic': [
+                { name: 'Dr. Kavitha Reddy', spec: 'Dermatologist', username: 'doctor1' }
+            ],
+            'Kids Care': [
+                { name: 'Dr. Manoj Tiwari', spec: 'Pediatrician', username: 'doctor2' }
+            ]
+        };
+
+        const timeSlots = [
+            '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+            '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'
+        ];
+
+        let selectedSpec = '';
+        let selectedHospital = '';
+        let selectedDoctor = '';
+        let selectedDoctorUsername = '';
+        let selectedTime = '';
+
+        function selectSpec(spec, el) {
+            document.querySelectorAll('.spec-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedSpec = spec;
+
+            // Filter hospitals that have this specialization or are multi-specialty (mock logic)
+            const filtered = hospitals.filter(h => h.spec === spec || h.name === 'NIMS Hospital');
+            const list = document.getElementById('hospitalsList');
+            list.innerHTML = filtered.map(h => `
+                <div class="hospital-card">
+                    <div class="hospital-info">
+                        <h3>${h.name}</h3>
+                        <p>${h.address}</p>
+                        <p class="phone">📞 ${h.phone}</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="selectHospital('${h.name}')">Select</button>
+                </div>
+            `).join('');
+            showStep(2);
+        }
+
+        function selectHospital(name) {
+            selectedHospital = name;
+
+            // Filter doctors for this hospital and specialization
+            const hospitalDoctors = doctors[name] || [];
+            const filteredDoctors = hospitalDoctors.filter(d => d.spec === selectedSpec);
+
+            const list = document.getElementById('doctorsList');
+            if (filteredDoctors.length === 0) {
+                list.innerHTML = `<p style="padding: 20px; text-align: center; color: var(--text-secondary);">No doctors available for ${selectedSpec} at ${name}.</p>`;
+            } else {
+                list.innerHTML = filteredDoctors.map(d => `
+                    <div class="hospital-card">
+                        <div class="hospital-info">
+                            <h3>${d.name}</h3>
+                            <p>${selectedSpec}</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="selectDoctor('${d.name}', '${d.username}')">Select Doctor</button>
+                    </div>
+                `).join('');
+            }
+            showStep(3);
+        }
+
+        function selectDoctor(doctorName, doctorUsername) {
+            selectedDoctor = doctorName;
+            selectedDoctorUsername = doctorUsername;
+            const slots = document.getElementById('timeSlots');
+            slots.innerHTML = timeSlots.map(t => `
+                <div class="time-slot" onclick="selectTime('${t}', this)">${t}</div>
+            `).join('');
+            showStep(4);
+        }
+
+        function selectTime(time, el) {
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTime = time;
+
+            document.getElementById('selectedSpecDisplay').value = selectedSpec;
+            document.getElementById('selectedDoctor').value = selectedDoctor;
+            document.getElementById('selectedHospital').value = selectedHospital;
+            document.getElementById('selectedTime').value = selectedTime;
+            showStep(5);
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step' + step).classList.remove('hidden');
+        }
+
+        async function confirmBooking() {
+            const name = document.getElementById('patientName').value.trim();
+            const phone = document.getElementById('patientPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('Please enter patient name and phone number');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/book-appointment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        specialization: selectedSpec,
+                        hospital: selectedHospital,
+                        doctor: selectedDoctor,
+                        doctor_username: selectedDoctorUsername,
+                        time: selectedTime,
+                        patientName: name,
+                        phone: phone
+                    })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (e) {
+                alert('Error booking appointment');
+            }
+        }
+    </script>
+</body>
+
+</html>

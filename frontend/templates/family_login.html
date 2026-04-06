@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Member Login - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --success: #06d6a0;
+            --info: #4895ef;
+            --warning: #ffd166;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.65);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--bg-surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary), #ff6b6b);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(230, 57, 70, 0.3);
+        }
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--info);
+            background: rgba(72, 149, 239, 0.08);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--info), #3a86ff);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(72, 149, 239, 0.3);
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+        .back-link a {
+            color: var(--info);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .info-box {
+            background: rgba(72, 149, 239, 0.1);
+            border: 1px solid rgba(72, 149, 239, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .info-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .info-box strong {
+            color: var(--info);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-icon">👨‍👩‍👧‍👦</div>
+                <h1>Family Portal</h1>
+                <p>Access health services for your loved ones</p>
+            </div>
+            
+            <div class="info-box">
+                <p><strong>Family Member Login</strong> - Use this portal to access health services, book appointments, medicine reminders, and more for your family.</p>
+            </div>
+            
+            <form method="POST" action="/family-login">
+                <div class="form-group">
+                    <label>Family Member Name</label>
+                    <input type="text" name="family_name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" name="patient_name" placeholder="Name of patient to care for" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Relationship</label>
+                    <select name="relationship" required>
+                        <option value="">Select relationship</option>
+                        <option value="Son">Son</option>
+                        <option value="Daughter">Daughter</option>
+                        <option value="Spouse">Spouse</option>
+                        <option value="Brother">Brother</option>
+                        <option value="Sister">Sister</option>
+                        <option value="Father">Father</option>
+                        <option value="Mother">Mother</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" placeholder="Your phone number" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Login to Family Portal</button>
+            </form>
+            
+            <div class="back-link">
+                <a href="/login">← Back to Main Login</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

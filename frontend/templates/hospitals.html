@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Hospitals - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --accent: #ff6b6b;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --info: #4895ef;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--info), #4cc9f0);
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .hospitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .hospital-card {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .hospital-card:hover {
+            border-color: var(--info);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(72, 149, 239, 0.2);
+        }
+        .hospital-card .name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        .hospital-card .speciality {
+            color: var(--info);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .hospital-card .address {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .hospital-card .phone {
+            color: var(--success);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .hospital-card .distance {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .hospital-card .emergency-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-call {
+            background: var(--success);
+            color: white;
+        }
+        .btn-maps {
+            background: var(--info);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏥 Nearby Hospitals</h1>
+        <p>Find Emergency Medical Services - HeartGuard AI</p>
+    </div>
+    
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="hospitals-grid">
+            {% for hospital in hospitals %}
+            <div class="hospital-card">
+                <div class="name">{{ hospital.name }}</div>
+                <div class="speciality">{{ hospital.speciality }}</div>
+                <div class="address">📍 {{ hospital.address }}</div>
+                <div class="phone">📞 {{ hospital.phone }}</div>
+                <span class="distance">📏 {{ hospital.distance }}</span>
+                {% if hospital.emergency %}
+                <span class="emergency-badge">🚨 24/7 Emergency</span>
+                {% endif %}
+                <div class="action-buttons">
+                    <a href="tel:{{ hospital.phone }}" class="btn btn-call">📞 Call</a>
+                    <a href="https://www.google.com/maps?q={{ hospital.lat }},{{ hospital.lng }}" target="_blank" class="btn btn-maps">🗺️ Maps</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

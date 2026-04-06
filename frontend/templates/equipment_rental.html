@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Rental - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e63946;
+            --success: #06d6a0;
+            --info: #4895ef;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .equipment-card {
+            background: var(--bg-surface);
+            padding: 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .equipment-card:hover,
+        .equipment-card.selected {
+            border-color: #1abc9c;
+            background: rgba(26, 188, 156, 0.1);
+        }
+
+        .equipment-card .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .equipment-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .equipment-card .price {
+            color: var(--success);
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .equipment-card .deposit {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .booking-form {
+            background: var(--bg-surface);
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .btn-book {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🏥 Health Equipment Rental</h1>
+        <p>Rent medical equipment for home use</p>
+    </div>
+
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <h2 style="margin-bottom: 20px;">Select Equipment</h2>
+        <div class="equipment-grid">
+            <div class="equipment-card" onclick="selectEquipment('Oxygen Cylinder', 150, this)">
+                <div class="icon">🫁</div>
+                <h3>Oxygen Cylinder</h3>
+                <p>Portable oxygen for home use</p>
+                <p class="price">₹150/day</p>
+                <p class="deposit">Refundable deposit: ₹2000</p>
+            </div>
+            <div class="equipment-card" onclick="selectEquipment('Wheelchair', 80, this)">
+                <div class="icon">♿</div>
+                <h3>Wheelchair</h3>
+                <p>Foldable wheelchair</p>
+                <p class="price">₹80/day</p>
+                <p class="deposit">Refundable deposit: ₹500</p>
+            </div>
+            <div class="equipment-card" onclick="selectEquipment('Hospital Bed', 200, this)">
+                <div class="icon">🛏️</div>
+                <h3>Hospital Bed</h3>
+                <p>Adjustable hospital bed with railing</p>
+                <p class="price">₹200/day</p>
+                <p class="deposit">Refundable deposit: ₹3000</p>
+            </div>
+            <div class="equipment-card" onclick="selectEquipment('BP Monitor', 50, this)">
+                <div class="icon">💓</div>
+                <h3>BP Monitor</h3>
+                <p>Digital blood pressure monitor</p>
+                <p class="price">₹50/day</p>
+                <p class="deposit">Refundable deposit: ₹500</p>
+            </div>
+            <div class="equipment-card" onclick="selectEquipment('Pulse Oximeter', 30, this)">
+                <div class="icon">❤️</div>
+                <h3>Pulse Oximeter</h3>
+                <p>Finger tip pulse oximeter</p>
+                <p class="price">₹30/day</p>
+                <p class="deposit">Refundable deposit: ₹300</p>
+            </div>
+            <div class="equipment-card" onclick="selectEquipment('Nebulizer', 60, this)">
+                <div class="icon">喷雾</div>
+                <h3>Nebulizer</h3>
+                <p>Portable nebulizer for breathing</p>
+                <p class="price">₹60/day</p>
+                <p class="deposit">Refundable deposit: ₹500</p>
+            </div>
+        </div>
+
+        <div class="booking-form hidden" id="bookingForm">
+            <h2>Rent <span id="selectedEquipment"></span></h2>
+            <div class="form-group">
+                <label>Patient Name</label>
+                <input type="text" id="patientName" placeholder="Enter patient name">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="patientPhone" placeholder="Enter 10-digit mobile number" maxlength="10"
+                    minlength="10" pattern="[0-9]{10}"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+            </div>
+            <div class="form-group">
+                <label>Delivery Address</label>
+                <input type="text" id="patientAddress" placeholder="Enter delivery address">
+            </div>
+            <div class="form-group">
+                <label>Rental Duration (Days)</label>
+                <select id="rentalDays">
+                    <option value="1">1 Day</option>
+                    <option value="3">3 Days</option>
+                    <option value="7">7 Days</option>
+                    <option value="14">14 Days</option>
+                    <option value="30">30 Days</option>
+                </select>
+            </div>
+            <button class="btn-book" onclick="confirmRental()">✅ Confirm Rental</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedEquipment = '';
+        let dailyRate = 0;
+
+        function selectEquipment(equipment, rate, el) {
+            document.querySelectorAll('.equipment-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedEquipment = equipment;
+            dailyRate = rate;
+            document.getElementById('selectedEquipment').innerText = equipment + ' (₹' + rate + '/day)';
+            document.getElementById('bookingForm').classList.remove('hidden');
+        }
+
+        async function confirmRental() {
+            const name = document.getElementById('patientName').value.trim();
+            const phone = document.getElementById('patientPhone').value.trim();
+            const address = document.getElementById('patientAddress').value.trim();
+            const days = document.getElementById('rentalDays').value;
+
+            if (!name || !phone || !address) {
+                alert('Please fill all details');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/rent-equipment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        equipment: selectedEquipment,
+                        dailyRate: dailyRate,
+                        days: days,
+                        patientName: name,
+                        phone: phone,
+                        address: address
+                    })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if (data.success) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (e) {
+                alert('Error renting equipment');
+            }
+        }
+    </script>
+</body>
+
+</html>

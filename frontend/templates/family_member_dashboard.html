@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Member Dashboard - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --success: #06d6a0;
+            --info: #4895ef;
+            --warning: #ffd166;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --bg-card: rgba(17, 24, 39, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.65);
+            --glass-border: rgba(255,255,255,0.08);
+            --radius-sm: 16px;
+            --radius-md: 20px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--info), #3a86ff);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .header-title p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .user-details {
+            text-align: left;
+        }
+        .user-details .name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .user-details .role {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .welcome-section h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .welcome-section p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        .patient-info {
+            background: rgba(72, 149, 239, 0.1);
+            border: 1px solid rgba(72, 149, 239, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .patient-info span {
+            color: var(--info);
+            font-weight: 600;
+        }
+        
+        /* Services Grid */
+        .services-section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .section-title .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .section-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .section-title p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 32px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .service-card:nth-child(1):hover { border-color: rgba(72, 149, 239, 0.4); box-shadow: 0 20px 40px rgba(72, 149, 239, 0.15); }
+        .service-card:nth-child(2):hover { border-color: rgba(6, 214, 160, 0.4); box-shadow: 0 20px 40px rgba(6, 214, 160, 0.15); }
+        .service-card:nth-child(3):hover { border-color: rgba(255, 209, 102, 0.4); box-shadow: 0 20px 40px rgba(255, 209, 102, 0.15); }
+        .service-card:nth-child(4):hover { border-color: rgba(230, 57, 70, 0.4); box-shadow: 0 20px 40px rgba(230, 57, 70, 0.15); }
+        .service-card:nth-child(5):hover { border-color: rgba(167, 139, 250, 0.4); box-shadow: 0 20px 40px rgba(167, 139, 250, 0.15); }
+        .service-card:nth-child(6):hover { border-color: rgba(255, 107, 107, 0.4); box-shadow: 0 20px 40px rgba(255, 107, 107, 0.15); }
+        
+        .service-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .service-card:nth-child(1) .service-icon { background: rgba(72, 149, 239, 0.15); }
+        .service-card:nth-child(2) .service-icon { background: rgba(6, 214, 160, 0.15); }
+        .service-card:nth-child(3) .service-icon { background: rgba(255, 209, 102, 0.15); }
+        .service-card:nth-child(4) .service-icon { background: rgba(230, 57, 70, 0.15); }
+        .service-card:nth-child(5) .service-icon { background: rgba(167, 139, 250, 0.15); }
+        .service-card:nth-child(6) .service-icon { background: rgba(255, 107, 107, 0.15); }
+        
+        .service-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .service-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        /* Emergency Section */
+        .emergency-section {
+            margin-top: 48px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(239, 71, 111, 0.05));
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            border-radius: var(--radius-md);
+        }
+        .emergency-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .emergency-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            text-align: left;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .emergency-btn .em-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .emergency-btn .em-text h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .emergency-btn .em-text p {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .em-location {
+            border-color: rgba(72, 149, 239, 0.3);
+            color: #4895ef;
+        }
+        .em-location .em-icon { background: rgba(72, 149, 239, 0.15); }
+        .em-location:hover { background: rgba(72, 149, 239, 0.1); }
+        
+        .em-ambulance {
+            border-color: rgba(230, 57, 70, 0.3);
+            color: #e63946;
+        }
+        .em-ambulance .em-icon { background: rgba(230, 57, 70, 0.15); }
+        .em-ambulance:hover { background: rgba(230, 57, 70, 0.1); }
+        
+        .em-hospitals {
+            border-color: rgba(6, 214, 160, 0.3);
+            color: #06d6a0;
+        }
+        .em-hospitals .em-icon { background: rgba(6, 214, 160, 0.15); }
+        .em-hospitals:hover { background: rgba(6, 214, 160, 0.1); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .header-left {
+                flex-direction: column;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .emergency-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-icon">👨‍👩‍👧‍👦</div>
+            <div class="header-title">
+                <h1>Family Member Portal</h1>
+                <p>HeartGuard AI - Care for your loved ones</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-avatar">👤</div>
+            <div class="user-details">
+                <div class="name">{{ family_name }}</div>
+                <div class="role">Caring for {{ patient_name }}</div>
+            </div>
+        </div>
+        <a href="/family-logout" class="logout-btn">Logout</a>
+    </header>
+    
+    <div class="container">
+        <div class="welcome-section">
+            <h2>Welcome, {{ family_name }}! 💝</h2>
+            <p>Manage health services for your loved one</p>
+            <div class="patient-info">
+                Patient: <span>{{ patient_name }}</span> | Relationship: <span>{{ relationship }}</span>
+            </div>
+        </div>
+        
+        <!-- Health Services -->
+        <section class="services-section">
+            <div class="section-title">
+                <div class="icon" style="background: rgba(72, 149, 239, 0.15);">🏥</div>
+                <div>
+                    <h2>Health Services</h2>
+                    <p>Book appointments, health services, and medical assistance</p>
+                </div>
+            </div>
+            
+            <div class="services-grid">
+                <a href="/doctor-appointment" class="service-card">
+                    <div class="service-icon">👨‍⚕️</div>
+                    <h3>Doctor Appointment</h3>
+                    <p>Book appointment with specialists</p>
+                </a>
+                
+                <a href="/health-service" class="service-card">
+                    <div class="service-icon">🩺</div>
+                    <h3>Health Services</h3>
+                    <p>Home nurse, BP check, ECG & more</p>
+                </a>
+                
+                <a href="/medicine-reminder" class="service-card">
+                    <div class="service-icon">💊</div>
+                    <h3>Medicine Reminder</h3>
+                    <p>Set reminders for medications</p>
+                </a>
+                
+                <a href="/health-workers" class="service-card">
+                    <div class="service-icon">👩‍⚕️</div>
+                    <h3>Health Workers</h3>
+                    <p>Caretakers, nurses, dieticians</p>
+                </a>
+                
+                <a href="/lab-test" class="service-card">
+                    <div class="service-icon">🧪</div>
+                    <h3>Lab Test Pickup</h3>
+                    <p>Book sample collection at home</p>
+                </a>
+                
+                <a href="/equipment-rental" class="service-card">
+                    <div class="service-icon">🦽</div>
+                    <h3>Equipment Rental</h3>
+                    <p>Oxygen, wheelchair, hospital bed</p>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Emergency Actions -->
+        <section class="emergency-section">
+            <h3>🆘 Emergency Actions</h3>
+            <div class="emergency-grid">
+                <a href="/send-location" class="emergency-btn em-location">
+                    <div class="em-icon">📍</div>
+                    <div class="em-text">
+                        <h4>Send Location</h4>
+                        <p>Share GPS location with emergency contacts</p>
+                    </div>
+                </a>
+                
+                <a href="/call-ambulance" class="emergency-btn em-ambulance">
+                    <div class="em-icon">🚑</div>
+                    <div class="em-text">
+                        <h4>Call Ambulance</h4>
+                        <p>Dispatch nearest ambulance</p>
+                    </div>
+                </a>
+                
+                <a href="/hospitals" class="emergency-btn em-hospitals">
+                    <div class="em-icon">🏥</div>
+                    <div class="em-text">
+                        <h4>Nearest Hospitals</h4>
+                        <p>Find hospitals with emergency care</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

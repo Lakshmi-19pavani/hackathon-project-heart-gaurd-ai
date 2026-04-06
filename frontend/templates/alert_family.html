@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Family - HeartGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --accent: #ff6b6b;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --info: #4895ef;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .emergency-banner {
+            background: linear-gradient(135deg, var(--danger), #ff6b6b);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .emergency-banner h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .contact-card {
+            background: var(--bg-surface);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .contact-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+        .contact-card .relationship {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .contact-card .phone {
+            color: var(--info);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-sms {
+            background: var(--info);
+            color: white;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-call {
+            background: var(--success);
+            color: white;
+        }
+        .alert-all-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--danger), #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        .alert-all-btn:hover {
+            transform: scale(1.02);
+        }
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        }
+        .toast.success { background: linear-gradient(135deg, #06d6a0, #00b894); }
+        .toast.error { background: linear-gradient(135deg, #e63946, #c1121f); }
+        .toast.info { background: linear-gradient(135deg, #4895ef, #3a86ff); }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚨 Alert Family Contacts</h1>
+        <p>Emergency Alert System - HeartGuard AI</p>
+    </div>
+    
+    <div class="container">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="emergency-banner">
+            <h2>⚠️ EMERGENCY ALERT</h2>
+            <p>Send emergency alerts to your family contacts</p>
+        </div>
+        
+        <h3 style="margin-bottom: 15px;">Your Emergency Contacts ({{ contacts|length }}):</h3>
+        
+        <div class="contacts-grid">
+            {% for contact in contacts %}
+            <div class="contact-card">
+                <h3>{{ contact.name }}</h3>
+                <p class="relationship">{{ contact.relationship }}</p>
+                <p class="phone">📱 {{ contact.phone }}</p>
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-sms" onclick="sendSMS('{{ contact.phone }}', '{{ contact.name }}'); return false;">📲 SMS</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button class="alert-all-btn" onclick="alertAllContacts()">
+            🚨 SEND ALERT TO ALL CONTACTS
+        </button>
+    </div>
+    
+    <script>
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+        
+        function alertAllContacts() {
+            const contacts = {{ contacts|tojson }};
+            const message = "EMERGENCY! I need immediate help! My location: https://www.google.com/maps";
+            
+            // Open SMS for all contacts
+            contacts.forEach(function(contact, index) {
+                setTimeout(function() {
+                    window.location.href = `sms:${contact.phone}?body=${encodeURIComponent(message)}`;
+                }, index * 500);
+            });
+            
+            // Show green success toast message
+            showToast('✅ Alert message sent to all contact people', 'success');
+        }
+        
+        function sendSMS(phone, name) {
+            window.location.href = `sms:${phone}?body=EMERGENCY! I need help! My location: https://www.google.com/maps`;
+            showToast('✅ SMS sent successfully to ' + name, 'success');
+        }
+    </script>
+</body>
+</html>

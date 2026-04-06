@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartGuard AI — Send Location</title>
+    <meta name="description" content="Share your live GPS location with emergency contacts.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e63946;
+            --primary-dark: #c1121f;
+            --accent: #ff6b6b;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --info: #4895ef;
+            --bg-dark: #0a0e1a;
+            --bg-surface: #111827;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 0 32px;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-heart {
+            font-size: 28px;
+            animation: heartbeat 1.4s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            14% {
+                transform: scale(1.15);
+            }
+
+            28% {
+                transform: scale(1);
+            }
+
+            42% {
+                transform: scale(1.1);
+            }
+
+            56% {
+                transform: scale(1);
+            }
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e63946, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: rgba(72, 149, 239, 0.15);
+            border-color: rgba(72, 149, 239, 0.3);
+            color: var(--info);
+            transform: translateX(-3px);
+        }
+
+        /* ==================== MAIN ==================== */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* Page Hero */
+        .page-hero {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .hero-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .page-hero h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #4895ef, #4cc9f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Location status */
+        .location-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: rgba(72, 149, 239, 0.08);
+            border: 1px solid rgba(72, 149, 239, 0.2);
+            border-radius: var(--radius-sm);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.4s ease 0.2s both;
+        }
+
+        .location-status.success {
+            background: rgba(6, 214, 160, 0.08);
+            border-color: rgba(6, 214, 160, 0.2);
+        }
+
+        .location-status .loc-icon {
+            font-size: 24px;
+        }
+
+        .location-status .loc-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .location-status .loc-text strong {
+            color: var(--text-primary);
+        }
+
+        /* ==================== CONTACTS LIST ==================== */
+        .contacts-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            animation: fadeInUp 0.4s ease 0.3s both;
+        }
+
+        .contacts-section-title .badge {
+            background: rgba(72, 149, 239, 0.15);
+            color: var(--info);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        .contact-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .contact-card:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .contact-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .contact-card:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .contact-card:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .contact-card:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        .contact-card:nth-child(7) {
+            animation-delay: 0.4s;
+        }
+
+        .contact-card:nth-child(8) {
+            animation-delay: 0.45s;
+        }
+
+        .contact-card:nth-child(9) {
+            animation-delay: 0.5s;
+        }
+
+        .contact-card:nth-child(10) {
+            animation-delay: 0.55s;
+        }
+
+        .contact-card:hover {
+            border-color: rgba(72, 149, 239, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .contact-card.sent {
+            border-color: rgba(6, 214, 160, 0.3);
+            background: rgba(6, 214, 160, 0.04);
+        }
+
+        .contact-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .contact-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .avatar-blue {
+            background: linear-gradient(135deg, #4895ef, #4cc9f0);
+        }
+
+        .avatar-pink {
+            background: linear-gradient(135deg, #ef476f, #ff6b6b);
+        }
+
+        .avatar-green {
+            background: linear-gradient(135deg, #06d6a0, #1bba86);
+        }
+
+        .avatar-purple {
+            background: linear-gradient(135deg, #7b2ff7, #c084fc);
+        }
+
+        .avatar-orange {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+        }
+
+        .avatar-teal {
+            background: linear-gradient(135deg, #14b8a6, #2dd4bf);
+        }
+
+        .contact-details h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .contact-details .relationship {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .contact-details .phone {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .sent-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 100px;
+            animation: popIn 0.3s ease;
+        }
+
+        .contact-card.sent .sent-badge {
+            display: flex;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            border: 1px solid;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: rgba(37, 211, 102, 0.1);
+            border-color: rgba(37, 211, 102, 0.25);
+            color: #25d366;
+        }
+
+        .btn-whatsapp:hover {
+            background: rgba(37, 211, 102, 0.2);
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.2);
+        }
+
+        .btn-sms {
+            background: rgba(72, 149, 239, 0.1);
+            border-color: rgba(72, 149, 239, 0.25);
+            color: #4895ef;
+        }
+
+        .btn-sms:hover {
+            background: rgba(72, 149, 239, 0.2);
+            box-shadow: 0 4px 16px rgba(72, 149, 239, 0.2);
+        }
+
+        .btn-call {
+            background: rgba(6, 214, 160, 0.1);
+            border-color: rgba(6, 214, 160, 0.25);
+            color: #06d6a0;
+        }
+
+        .btn-call:hover {
+            background: rgba(6, 214, 160, 0.2);
+            box-shadow: 0 4px 16px rgba(6, 214, 160, 0.2);
+        }
+
+        .btn-send-all {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-top: 28px;
+            background: linear-gradient(135deg, #4895ef, #4cc9f0);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+            animation: fadeInUp 0.5s ease 0.6s both;
+        }
+
+        .btn-send-all:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(72, 149, 239, 0.3);
+        }
+
+        .btn-send-all:active {
+            transform: translateY(0);
+        }
+
+        .btn-send-all:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-send-all.sent {
+            background: linear-gradient(135deg, #06d6a0, #1bba86);
+        }
+
+        /* Maps Link */
+        .maps-link-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 22px;
+            margin-top: 20px;
+            background: rgba(72, 149, 239, 0.06);
+            border: 1px solid rgba(72, 149, 239, 0.2);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            color: var(--info);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease 0.65s both;
+        }
+
+        .maps-link-card:hover {
+            background: rgba(72, 149, 239, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .maps-link-card .maps-icon {
+            font-size: 28px;
+        }
+
+        .maps-link-card .maps-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .maps-link-card .maps-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideInRight 0.4s ease;
+            max-width: 400px;
+        }
+
+        .toast.success {
+            background: rgba(6, 214, 160, 0.15);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            color: var(--success);
+        }
+
+        .toast.error {
+            background: rgba(239, 71, 111, 0.15);
+            border: 1px solid rgba(239, 71, 111, 0.3);
+            color: var(--danger);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px 16px;
+            }
+
+            .page-hero h1 {
+                font-size: 24px;
+            }
+
+            .contact-card {
+                padding: 18px;
+            }
+
+            .contact-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="/dashboard" class="logo">
+                <span class="logo-heart">❤️</span>
+                <span class="logo-text">HeartGuard AI</span>
+            </a>
+            <a href="/dashboard" class="btn-back">← Back to Dashboard</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- Hero -->
+        <div class="page-hero">
+            <span class="hero-icon">📍</span>
+            <h1>Send Emergency Location</h1>
+            <p>Share your live GPS location with your emergency contacts via SMS</p>
+        </div>
+
+        <!-- Location Status -->
+        <div class="location-status" id="locationStatus">
+            <span class="loc-icon">🔄</span>
+            <div class="loc-text">
+                <strong id="locStatusText">Detecting your location...</strong><br>
+                <span id="locCoords">Requesting GPS access</span>
+            </div>
+        </div>
+
+        <!-- Contacts Title -->
+        <div class="contacts-section-title">
+            <span>👨‍👩‍👧‍👦 Emergency Contacts</span>
+            <span class="badge" id="contactCount">Loading...</span>
+        </div>
+
+        <!-- Contacts List -->
+        <div class="contacts-list" id="contactsList">
+            <!-- Contacts will be rendered by JS -->
+        </div>
+
+        <!-- Send All -->
+        <button class="btn-send-all" id="sendAllBtn" onclick="sendToAll()">
+            📨 Send Location to All Contacts
+        </button>
+
+        <!-- Google Maps Link -->
+        <a class="maps-link-card" id="mapsLink" href="#" target="_blank" style="display:none;">
+            <span class="maps-icon">🗺️</span>
+            <div>
+                <div class="maps-text">Open in Google Maps</div>
+                <div class="maps-sub" id="mapsCoords">View your exact location</div>
+            </div>
+        </a>
+    </main>
+
+    <script>
+        const AVATAR_COLORS = ['avatar-blue', 'avatar-pink', 'avatar-green', 'avatar-purple', 'avatar-orange', 'avatar-teal'];
+        let userLocation = { lat: 0, lng: 0, obtained: false };
+        let contacts = [];
+
+        // ==================== LOCATION ====================
+        function detectLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude, obtained: true };
+                        showLocationSuccess();
+                    },
+                    (err) => {
+                        console.log('GPS denied, using IP fallback:', err.message);
+                        fallbackIPLocation();
+                    },
+                    { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+                );
+            } else {
+                fallbackIPLocation();
+            }
+        }
+
+        async function fallbackIPLocation() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                if (data.latitude && data.longitude) {
+                    userLocation = { lat: data.latitude, lng: data.longitude, obtained: true };
+                    showLocationSuccess();
+                    return;
+                }
+            } catch (e) { }
+            try {
+                const res2 = await fetch('https://ip-api.com/json/?fields=lat,lon,city');
+                const data2 = await res2.json();
+                if (data2.lat && data2.lon) {
+                    userLocation = { lat: data2.lat, lng: data2.lon, obtained: true };
+                    showLocationSuccess();
+                    return;
+                }
+            } catch (e) { }
+
+            // Fallback default (Hyderabad)
+            userLocation = { lat: 17.3850, lng: 78.4867, obtained: true };
+            showLocationSuccess();
+        }
+
+        function showLocationSuccess() {
+            const status = document.getElementById('locationStatus');
+            status.classList.add('success');
+            status.querySelector('.loc-icon').textContent = '✅';
+            document.getElementById('locStatusText').textContent = 'Location detected successfully';
+            document.getElementById('locCoords').textContent = `GPS: ${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`;
+
+            const mapsLink = document.getElementById('mapsLink');
+            mapsLink.href = `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`;
+            mapsLink.style.display = 'flex';
+            document.getElementById('mapsCoords').textContent = `${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`;
+        }
+
+        // ==================== LOAD CONTACTS ====================
+        async function loadContacts() {
+            try {
+                const res = await fetch('/api/contacts');
+                const data = await res.json();
+                contacts = data.contacts || [];
+                document.getElementById('contactCount').textContent = `${contacts.length} contacts`;
+                renderContacts();
+            } catch (e) {
+                console.error('Error loading contacts:', e);
+                document.getElementById('contactsList').innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px;">Could not load contacts. Please try again.</p>';
+            }
+        }
+
+        function renderContacts() {
+            const list = document.getElementById('contactsList');
+            if (contacts.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align:center;padding:40px;color:var(--text-muted);">
+                        <span style="font-size:48px;display:block;margin-bottom:16px;">📭</span>
+                        <p>No emergency contacts found.</p>
+                        <p style="margin-top:8px;"><a href="/dashboard" style="color:var(--info);">Go to Dashboard</a> to add contacts.</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = contacts.map((c, i) => {
+                const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+                const initial = c.name.charAt(0).toUpperCase();
+                const phone = c.phone.replace(/\s|-/g, '');
+                const intlPhone = phone.startsWith('+') ? phone : '+91' + phone;
+                const cleanPhone = intlPhone.replace('+', '');
+
+                return `
+                <div class="contact-card" id="contact-${i}">
+                    <div class="contact-top">
+                        <div class="contact-info">
+                            <div class="contact-avatar ${color}">${initial}</div>
+                            <div class="contact-details">
+                                <h3>${c.name}</h3>
+                                <div class="relationship">${c.relationship || 'Family Member'}</div>
+                                <div class="phone">📱 ${c.phone}</div>
+                            </div>
+                        </div>
+                        <span class="sent-badge" id="sentBadge-${i}">✅ Sent</span>
+                    </div>
+                    <div class="contact-actions">
+                        <a class="action-btn btn-sms" href="sms:${intlPhone}?body=${encodeURIComponent(getEmergencyMessage())}" onclick="markSent(${i})">
+                            📩 SMS
+                        </a>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function getEmergencyMessage() {
+            const mapsUrl = userLocation.obtained
+                ? `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`
+                : 'Location not available';
+            return `🚨 EMERGENCY! I need help! My location: ${mapsUrl}`;
+        }
+
+        function markSent(index) {
+            const card = document.getElementById(`contact-${index}`);
+            card.classList.add('sent');
+        }
+
+        async function sendToAll() {
+            const btn = document.getElementById('sendAllBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Sending to all contacts...';
+
+            // Log this emergency to the backend
+            try {
+                await fetch('/api/emergency', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'send_location',
+                        lat: userLocation.lat,
+                        lng: userLocation.lng
+                    })
+                });
+            } catch (e) {
+                console.error('Error logging emergency:', e);
+            }
+
+            // Mark all contacts as sent with a staggered animation
+            contacts.forEach((_, i) => {
+                setTimeout(() => {
+                    markSent(i);
+                }, i * 150);
+            });
+
+            setTimeout(() => {
+                btn.textContent = '✅ Location Sent to All Contacts!';
+                btn.classList.add('sent');
+                showToast('📍 Location shared with all emergency contacts!', 'success');
+            }, contacts.length * 150 + 300);
+        }
+
+        // ==================== TOAST ====================
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // ==================== INIT ====================
+        detectLocation();
+        loadContacts();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartGuard AI — Login</title>
+    <meta name="description"
+        content="HeartGuard AI - Smart Heart Health Monitoring & Prediction System. Login to access your personalized health dashboard.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #EF4444; /* red-500 */
+            --primary-hover: #DC2626; /* red-600 */
+            --primary-light: rgba(239, 68, 68, 0.15);
+            --bg-dark: #0B0F19;
+            --bg-card: rgba(17, 24, 39, 0.7); /* gray-900 with opacity */
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --glow-color: rgba(239, 68, 68, 0.4);
+            --font-family: 'Inter', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle Background Animations */
+        .bg-gradient {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            z-index: 0;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.1;
+            z-index: 0;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+
+        .ecg-line {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+        .ecg-line svg {
+            width: 200%;
+            height: 100%;
+            animation: ecg-scroll 8s linear infinite;
+        }
+        @keyframes ecg-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 10;
+            padding: 24px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header / Brand */
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), #b91c1c);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px var(--glow-color);
+            position: relative;
+            animation: iconPulse 2s infinite;
+        }
+        .brand-icon span {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px var(--glow-color); }
+        }
+        
+        .brand h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* Glass Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px 32px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header {
+            margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Role Segmented Control */
+        .role-selector {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .role-btn:hover {
+            color: var(--text-primary);
+        }
+        .role-btn.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .role-btn span {
+            font-size: 16px;
+        }
+
+        /* Error Message */
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #FCA5A5;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper .icon {
+            position: absolute;
+            left: 16px;
+            font-size: 16px;
+            color: var(--text-secondary);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        
+        .input-field {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 14px 16px 14px 44px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition);
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .input-field:focus + .icon, .input-field:focus ~ .icon {
+            color: var(--primary);
+        }
+        .input-field::placeholder {
+            color: rgba(156, 163, 175, 0.5);
+        }
+
+        .register-fields {
+            display: none;
+            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .register-fields.show {
+            display: block;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        /* Button Shimmer */
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-20deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* Toggle Link */
+        .toggle-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .toggle-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 4px;
+        }
+        .toggle-link:hover {
+            color: #F87171;
+            text-decoration: underline;
+        }
+
+        /* Features & Footer Links */
+        .footer-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 100px;
+        }
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .family-link-wrapper {
+            text-align: center;
+            margin-top: 24px;
+        }
+        .family-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #60A5FA;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: var(--transition);
+        }
+        .family-link:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 24px;
+            }
+            .brand h1 {
+                font-size: 24px;
+            }
+            .role-selector {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Abstract Background -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="ecg-line">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+            <polyline fill="none" stroke="rgba(239,68,68,0.5)" stroke-width="2"
+                points="0,30 100,30 120,30 130,10 140,50 150,5 160,55 170,30 190,30 300,30 320,30 330,10 340,50 350,5 360,55 370,30 390,30 500,30 520,30 530,10 540,50 550,5 560,55 570,30 590,30 600,30 700,30 720,30 730,10 740,50 750,5 760,55 770,30 790,30 900,30 920,30 930,10 940,50 950,5 960,55 970,30 990,30 1100,30 1120,30 1130,10 1140,50 1150,5 1160,55 1170,30 1200,30" />
+        </svg>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Brand -->
+        <div class="brand">
+            <div class="brand-icon">
+                <span>❤️</span>
+            </div>
+            <h1>HeartGuard AI</h1>
+            <p>Smart Heart Health Monitoring</p>
+        </div>
+
+        <!-- Glass Card Form -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title" id="form-title">Welcome Back</h2>
+                <p class="card-subtitle" id="form-subtitle">Sign in to your dashboard</p>
+            </div>
+
+            {% if error %}
+            <div class="alert">
+                <span>⚠️</span>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Role Selector Tabs -->
+            <div class="role-selector">
+                <button type="button" class="role-btn active" data-role="user" onclick="selectRole('user')">
+                    <span>👤</span> User
+                </button>
+                <button type="button" class="role-btn" data-role="doctor" onclick="selectRole('doctor')">
+                    <span>👨‍⚕️</span> Doctor
+                </button>
+                <button type="button" class="role-btn" data-role="admin" onclick="selectRole('admin')">
+                    <span>🔧</span> Admin
+                </button>
+            </div>
+
+            <form id="authForm" method="POST" action="/login">
+                <input type="hidden" id="selectedRole" name="role" value="user">
+
+                <!-- Hidden Register Field -->
+                <div class="register-fields" id="registerFields">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <div class="input-wrapper">
+                            <span class="icon">👤</span>
+                            <input type="text" id="name" name="name" class="input-field" placeholder="John Doe">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Email / Username</label>
+                    <div class="input-wrapper">
+                        <span class="icon">📧</span>
+                        <input type="text" id="username" name="username" class="input-field" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <span class="icon">🔒</span>
+                        <input type="password" id="password" name="password" class="input-field" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    Sign In →
+                </button>
+
+                <p class="toggle-text">
+                    <span id="toggleText">New to HeartGuard?</span>
+                    <a class="toggle-link" id="toggleLink" onclick="toggleMode()">Create Account</a>
+                </p>
+            </form>
+        </div>
+
+        <!-- Badges -->
+        <div class="footer-metrics">
+            <div class="badge"><div class="pulse-dot"></div> AI Powered</div>
+            <div class="badge"><div class="pulse-dot"></div> Real-time Alerts</div>
+        </div>
+
+        <!-- Elegant Family Link -->
+        <div class="family-link-wrapper">
+            <a href="/family-login" class="family-link">
+                👨‍👩‍👧 Family Member Portal →
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function selectRole(role) {
+            document.getElementById('selectedRole').value = role;
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.role === role) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        let isRegister = false;
+        function toggleMode() {
+            isRegister = !isRegister;
+            const form = document.getElementById('authForm');
+            const title = document.getElementById('form-title');
+            const subtitle = document.getElementById('form-subtitle');
+            const btn = document.getElementById('submitBtn');
+            const toggleText = document.getElementById('toggleText');
+            const toggleLink = document.getElementById('toggleLink');
+            const registerFields = document.getElementById('registerFields');
+            const nameField = document.getElementById('name');
+
+            if (isRegister) {
+                form.action = '/register';
+                title.textContent = 'Create Account';
+                subtitle.textContent = 'Join HeartGuard AI today';
+                btn.innerHTML = 'Create Account →';
+                toggleText.textContent = 'Already have an account?';
+                toggleLink.textContent = 'Sign In';
+                registerFields.classList.add('show');
+                nameField.required = true;
+            } else {
+                form.action = '/login';
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Sign in to your dashboard';
+                btn.innerHTML = 'Sign In →';
+                toggleText.textContent = 'New to HeartGuard?';
+                toggleLink.textContent = 'Create Account';
+                registerFields.classList.remove('show');
+                nameField.required = false;
+                nameField.value = '';
+            }
+        }
+
+        {% if show_register %}
+        toggleMode();
+        {% endif %}
+    </script>
+</body>
+</html>
